@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: page-header"></nav>
+<div>
+    <br>
+    <br>
+</div>
+<div class="container body-content">
+    <h1 style="text-align:center;" th:text="${pageTitle}"></h1>
+    <div class="table-responsive" style="text-align:center;">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th style="text-align:center">Event Name:</th>
+                    <th style="text-align:center">Event Date:</th>
+                </tr>
+                </thead>
+                <tr th:each="event : ${events}">
+                    <td><a th:href="'/events/detail?eventId=' + ${event.id}" th:text="${event.name}"></a></td>
+                    <td th:text="${event.eventDetails.formattedDate}"></td>
+                </tr>
+            </table>
+    </div>
+</div>
+</body>
+</html>

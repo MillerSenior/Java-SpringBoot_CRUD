@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: page-header"></nav>
+<div>
+    <br>
+    <br>
+</div>
+<div class="container body-content">
+<h1 style="text-align:center;" th:text="${title}"></h1>
+<div style="text-align:center">
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Tag Name</th>
+    </tr>
+    </thead>
+    <tr th:each="tag : ${tags}">
+        <td th:text="${tag.displayName}"></td>
+    </tr>
+
+</table>
+</div>
+</div>
+
+
+</body>
+</html>

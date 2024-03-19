@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: page-header"></nav>
+<div>
+    <br>
+    <br>
+</div>
+<div class="container body-content">
+    <h1 style="text-align:center;" th:text="${title}"></h1>
+    <br>
+    <div class="form-group" style="text-align:center;">
+        <form id="form2" style="text-align: center;" method="post" action="/budgetItems/deleteExpense"><!---->
+            <input type="hidden" name="eventId" th:value="${budgetItems.event.id}"/>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th  style="text-align:center;">Expense Name:</th>
+                    <th style="text-align:center;">Delete Expense:</th>
+                </tr>
+                </thead>
+                <tr th:each="expense : ${budgetItems}">
+                    <td th:text="${expense.itemName}"></td>
+                    <td th:text="${expense.itemPrice}"></td>
+                    <td><input type="checkbox" name="budgetItemsId" th:value="${expense.id}" class="form-control"></td>
+
+                </tr>
+            </table>
+            <input name="submit" id="submit" type="submit" value="Delete Selected" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+</body>
+</html>

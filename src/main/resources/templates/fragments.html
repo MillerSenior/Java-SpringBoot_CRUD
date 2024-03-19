@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:fragment="head">
+    <!-- Bootstrap stylesheets and script -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{style.css}" type="text/css">
+    <!-- Js Plugins -->
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/deleteForm.js}"></script>
+
+    <title th:text="${title == null ? '' : ' :: ' + title}">@MillerMadeThis</title>
+</head>
+<body>
+<div>
+    <nav th:fragment="page-header" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="#" style="font-size:150%;">"Darro Tech's" EZ Planner App</a>
+            </div>
+            <a href="/">Home</a>
+            <a href="/events">All Events</a>
+            <a href="/events/create">Create Event</a>
+            <a href="/events/delete">Delete Event</a>
+            <a href="/eventCategories">All Categories</a>
+            <a href="/eventCategories/create">Create Category</a>
+            <a href="/tags">All Tags</a>
+            <a href="/tags/create">Create Tag</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+</div>
+</body>
+</html>

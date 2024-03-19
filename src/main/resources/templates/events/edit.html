@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: page-header"></nav>
+<div>
+    <br>
+    <br>
+</div>
+<div class="container body-content">
+    <h1 style="text-align:center;" th:text="${title}"></h1>
+    <br>
+    <div class="form-group" style="text-align:center;">
+        <form method="post" th:action="@{/events/edit}" class="form-group">
+            <input type="hidden" th:field="${event.id}" />
+           <input type="hidden" th:each="tag : ${tags}" th:value="${tag.displayName}" name="tag">
+            <table class="table table-striped form-group">
+                <tr>
+                    <th>Event Name:</th>
+                    <td><input type="text" th:field="${event.name}" class="form-control"/></td>
+                    <p style="color:red;" class="error" th:errors="${event.name}"></p>
+                </tr>
+                <tr>
+                    <th>Event Category:</th>
+                    <td><select class="form-control" th:field="${event.eventCategory}">
+                        <option th:each="eventCategory : ${categories}"
+                                th:value="${eventCategory.id}"
+                                th:text="${eventCategory.name}"
+                        ></option>
+                    </select>
+                    </td>
+                    <p style="color:red;" class="error" th:errors="${event.eventCategory}"></p>
+                </tr>
+                <tr>
+                    <th>Event Date:</th>
+                    <td><input type="date" th:field="${event.eventDetails.formattedDate}" class="form-control"/></td>
+                    <p style="color:red;" class="error" th:errors="${event.eventDetails.formattedDate}"></p>
+                </tr>
+                <tr>
+                    <th>Event Time:</th>
+                    <td> <select th:field="${event.eventDetails.time}" class="form-control">
+                        <option value="12 AM">12 AM</option>
+                        <option value="1 AM">1 AM</option>
+                        <option value="2 AM">2 AM</option>
+                        <option value="3 AM">3 AM</option>
+                        <option value="4 AM">4 AM</option>
+                        <option value="5 AM">5 AM</option>
+                        <option value="6 AM">6 AM</option>
+                        <option value="7 AM">7 AM</option>
+                        <option value="8 AM">8 AM</option>
+                        <option value="9 AM">9 AM</option>
+                        <option value="10 AM">10 AM</option>
+                        <option value="11 AM">11 AM</option>
+                        <option value="12 PM">12 PM</option>
+                        <option value="1 PM">1 PM</option>
+                        <option value="2 PM">2 PM</option>
+                        <option value="3 PM">3 PM</option>
+                        <option value="4 PM">4 PM</option>
+                        <option value="5 PM">5 PM</option>
+                        <option value="6 PM">6 PM</option>
+                        <option value="7 PM">7 PM</option>
+                        <option value="8 PM">8 PM</option>
+                        <option value="9 PM">9 PM</option>
+                        <option value="10 PM">10 PM</option>
+                        <option value="11 PM">11 PM</option>
+                    </select> </td>
+                    <p style="color:red;" class="error" th:errors="${event.eventDetails.time}"></p>
+                </tr>
+                <tr>
+                    <th>Event End Time:</th>
+                    <td> <select th:field="${event.eventDetails.endTime}" class="form-control">
+                        <option value="12 AM">12 AM</option>
+                        <option value="1 AM">1 AM</option>
+                        <option value="2 AM">2 AM</option>
+                        <option value="3 AM">3 AM</option>
+                        <option value="4 AM">4 AM</option>
+                        <option value="5 AM">5 AM</option>
+                        <option value="6 AM">6 AM</option>
+                        <option value="7 AM">7 AM</option>
+                        <option value="8 AM">8 AM</option>
+                        <option value="9 AM">9 AM</option>
+                        <option value="10 AM">10 AM</option>
+                        <option value="11 AM">11 AM</option>
+                        <option value="12 PM">12 PM</option>
+                        <option value="1 PM">1 PM</option>
+                        <option value="2 PM">2 PM</option>
+                        <option value="3 PM">3 PM</option>
+                        <option value="4 PM">4 PM</option>
+                        <option value="5 PM">5 PM</option>
+                        <option value="6 PM">6 PM</option>
+                        <option value="7 PM">7 PM</option>
+                        <option value="8 PM">8 PM</option>
+                        <option value="9 PM">9 PM</option>
+                        <option value="10 PM">10 PM</option>
+                        <option value="11 PM">11 PM</option>
+                    </select> </td>
+                    <p style="color:red;" class="error" th:errors="${event.eventDetails.endTime}"></p>
+                </tr>
+                <tr>
+                    <th>Event Weekday:</th>
+                    <td><select class="form-control" th:field="${event.eventDetails.weekday}">
+                        <option th:value="Sunday">Sunday</option>
+                        <option th:value="Monday">Monday</option>
+                        <option th:value="Tuesday">Tuesday</option>
+                        <option th:value="Wednesday">Wednesday</option>
+                        <option th:value="Thursday">Thursday</option>
+                        <option th:value="Friday">Friday</option>
+                        <option th:value="Saturday">Saturday</option>
+                    </select>
+                    </td>
+                    <p style="color:red;" class="error" th:errors="${event.eventDetails.weekday}"></p>
+                </tr>
+                <tr>
+                    <th>Event Budget:</th>
+                    <td><input type="text" th:field="${event.budget}" class="form-control"/>
+                    </td>
+                    <p style="color:red;" class="error" th:text="${errorMsg}"></p>
+                </tr>
+                <tr>
+                    <th>Event Location:</th>
+                    <td><input type="text" th:field="${event.eventDetails.location}" class="form-control"/>
+                    </td>
+                    <p style="color:red;" class="error" th:errors="${event.eventDetails.location}"></p>
+                </tr>
+                <tr>
+                    <th>Event Description:</th>
+                    <td><input type="text" th:field="${event.eventDetails.description}" class="form-control"/></td>
+                    <p class="error" th:errors="${event.eventDetails.description}"></p>
+                </tr>
+                <tr>
+                    <th>Expected Attendance:</th>
+                    <td><input type="number" th:field="${event.eventDetails.numberOfAttendees}" class="form-control"/></td>
+                    <p style="color:red;" class="error" th:errors="${event.eventDetails.numberOfAttendees}"></p>
+                </tr>
+                <tr>
+                    <th>Invitation Only:</th>
+                    <td><input type="checkbox" th:field="${event.eventDetails.invitationOnly}" class="form-control"/></td>
+                </tr>
+                <p style="color:red;" class="error" th:errors="${event.eventDetails.invitationOnly}"></p>
+                <tr>
+                    <th>Contact Email:</th>
+                    <td> <input type="text" th:field="${event.eventDetails.contactEmail}" class="form-control"/></td>
+                    <p style="color:red;" class="error" th:errors="${event.eventDetails.contactEmail}"></p>
+                </tr>
+            </table>
+            <div class="form-group">
+                <input type="submit" value="Edit" class="btn btn-primary btn-round" />
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

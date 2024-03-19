@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: page-header"></nav>
+<div>
+    <br>
+    <br>
+</div>
+<div class="container body-content">
+    <h1 style="text-align:center;" th:text="${title}"></h1>
+    <br>
+    <div class="form-group" style="text-align:center;">
+        <form method="post" th:action="@{/budgetItems/edit}">
+            <input type="hidden" th:value="${budgetItems.id}" name="id"/>
+            <input type="hidden" th:field="${budgetItems.event.id}"/>
+            <label>Item Name:<br>
+                <input class="form-control" type="text" th:value="${budgetItems.itemName}" name="itemName">
+            </label>
+            <span style="color:red;" th:errors="${budgetItems.itemName}" class="error"></span>
+            <br>
+            <label>Price:<br>
+                <input class="form-control" type="text" th:value="${budgetItems.itemPrice}" name="itemPrice">
+            </label>
+<!--            <span style="color:red;" th:errors="${budgetItems.itemPrice}" class="error"></span>-->
+            <p style="color:red;" th:text="${errorMsg}"></p>
+            <br>
+            <div>
+                <input type="submit" value="Edit Expense Information" class="btn btn-primary btn-round">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

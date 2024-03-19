@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: page-header"></nav>
+<h1 style="text-align:center;" th:text="${title}"></h1>
+<table class="table table-striped">
+    <tr>
+        <th>ID:</th>
+        <td th:text="${event.id}"></td>
+    </tr>
+    <tr>
+        <th>Event Category:</th>
+        <td th:text="${event.eventCategory.name}"></td>
+    </tr>
+    <tr>
+        <th>Event Date:</th>
+        <td th:text="${event.eventDetails.formattedDate}"></td>
+    </tr>
+    <tr>
+        <th>Start Time:</th>
+        <td th:text="${event.eventDetails.time}"></td>
+    </tr>
+    <tr>
+        <th>End Time:</th>
+        <td th:text="${event.eventDetails.endTime}"></td>
+    </tr>
+    <tr>
+        <th>Event Weekday:</th>
+        <td th:text="${event.eventDetails.weekday}"></td>
+    </tr>
+    <tr>
+        <th>Event Location:</th>
+        <td th:text="${event.eventDetails.location}"></td>
+    </tr>
+    <tr>
+        <th>Event Description:</th>
+        <td th:text="${event.eventDetails.description}"></td>
+    </tr>
+    <tr>
+        <th>Expected Attendance:</th>
+        <td th:text="${event.eventDetails.numberOfAttendees}"></td>
+    </tr>
+    <tr>
+        <th>Invitation Only:</th>
+        <th:block th:unless="${event.eventDetails.invitationOnly}">
+            <td>No</td>
+        </th:block>
+        <th:block th:if="${event.eventDetails.invitationOnly}">
+            <td>Yes</td>
+        </th:block>
+
+    </tr>
+    <tr>
+        <th>Contact Email:</th>
+        <td th:text="${event.eventDetails.contactEmail}"></td>
+    </tr>
+    <tr>
+        <th>Tags</th>
+        <td>
+            <span th:each="tag : ${tags}" th:text="${tag.displayName} + ' '"></span>
+        </td>
+    </tr>
+    <tr>
+        <th>Event Budget:</th>
+        <td th:text="${'$'+event.budget}"></td>
+    </tr>
+    <tr>
+        <th>Spendable Balance:</th>
+        <td th:text="${'$'+event.balance}"></td>
+    </tr>
+    <tr>
+        <th>Handle Event Expenses:</th>
+        <td>
+            <a style="font-size:125%" th:href="'/budgetItems/detail?eventId=' + ${event.id}">Add/View Expenses</a>
+        </td>
+    </tr>
+    <tr>
+    <tr>
+        <th>Edit Event:</th>
+        <td>
+            <a style="font-size:125%" th:href="@{/events/edit/{id}(id=${event.id})}">Edit Event</a>
+        </td>
+    </tr>
+</table>
+<div style="text-align:center">
+    <a style="font-size:125%" th:href="'/events/add-tag?eventId=' + ${event.id}">Add Tag</a>
+</div>
+<br>
+<!--<ul th:each="item : ${event.budgetItemsList}">-->
+<!--    <li><p th:text="${item.id}"></p></li>-->
+<!--    <li><p th:text="${item.itemName}"></p></li>-->
+<!--    <li><p th:text="${item.itemPrice}"></p></li>-->
+<!--    <li><a style="font-size:125%" th:href="@{/budgetItems/edit/{id}(id=${item.id})}">Check Expense</a></li>-->
+<!--    <li><p><a style="font-size:125%" th:href="@{/budgetItems/deleteExpense/{id}(id=${item.id})}">Delete Expense</a></p></li>-->
+
+<!--</ul>-->
+
+</body>
+</html>

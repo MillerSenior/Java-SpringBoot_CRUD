@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: page-header"></nav>
+<div>
+<br>
+<br>
+</div>
+<h1 style="text-align:center;">All Categories</h1>
+<div class="table-responsive" style="text-align:center;">
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th style="text-align:center;">Click to see events in given category name:</th>
+    </tr>
+    </thead>
+    <tr th:each="category : ${categories}">
+       <td><a th:text="${category.name}" th:href="'/events?categoryId=' + ${category.id}"></a></td>
+    </tr>
+
+
+</table>
+</div>
+</body>
+</html>
