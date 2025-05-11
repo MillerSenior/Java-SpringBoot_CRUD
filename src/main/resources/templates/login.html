@@ -1,32 +1,169 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
-<body>
-<!--<nav th:replace="fragments :: page-header"></nav>-->
-<br>
-<br>
- <h1 style="text-align:center;">"Darro Tech's" EZ Planner Application</h1>
-<div style="text-align:center;">
-    <form method="post">
-        <div class="form-group">
-            <label th:for="username">Username
-                <input class="form-control" th:field="${loginFormDTO.username}">
-            </label>
-            <p style="color:red;" class="error" th:errors="${loginFormDTO.username}"></p>
+<body class="modern-background">
+    <!-- Page loader is included from fragments -->
+    
+    <div class="content-wrapper">
+        <div class="auth-container" data-aos="fade-up" data-aos-delay="200">
+            <div class="text-center mb-4">
+                <i class="fas fa-calendar-check auth-icon"></i>
+                <h1 class="auth-title">
+                    <span class="highlight">DarroTech</span> EZ Planner
+                </h1>
+                <p class="auth-subtitle">Sign in to your account</p>
+            </div>
+            
+            <form method="post" class="needs-validation" novalidate>
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            th:field="${loginFormDTO.username}" 
+                            placeholder="Username"
+                            required>
+                    </div>
+                    <div class="error-message" th:errors="${loginFormDTO.username}"></div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            th:field="${loginFormDTO.password}" 
+                            placeholder="Password"
+                            required>
+                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" th:errors="${loginFormDTO.password}"></div>
+                </div>
+                
+                <div class="d-grid gap-2 mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </button>
+                </div>
+                
+                <div class="user-count">
+                    <div class="user-count-label">Current Users</div>
+                    <div class="user-count-number" th:text="${userCount}">10</div>
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="/register" class="auth-link">Create account</a></p>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Password
-                <input class="form-control" th:field="${loginFormDTO.password}" type="password">
-            </label>
-            <p style="color:red;" class="error" th:errors="${loginFormDTO.password}"></p>
-        </div>
-
-        <input type="submit" class="btn btn-primary btn-round" value="Log In" />
-    </form>
-    <h3>Current Subscribers: <span style="font-size:150%;" class="badge" th:text="${userCount}">10</span></h3><br>
-    <p style="color:black;">Don't have an account? <a href="/register">Subscribe  today for free.</a></p>
-</div>
-<p>&#169 2022 Application Made By <a th:href="@{links/resume}">@DarroTechMadeThis<sup>3</sup></a></p>
-
+    </div>
+    
+    <!-- Include the footer -->
+    <footer th:replace="fragments :: footer"></footer>
+    
+    <script>
+        // Toggle password visibility
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.querySelector('.toggle-password');
+            const passwordField = document.querySelector('input[type="password"]');
+            
+            if (togglePassword && passwordField) {
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordField.setAttribute('type', type);
+                    
+                    // Toggle eye icon
+                    const eyeIcon = this.querySelector('i');
+                    eyeIcon.classList.toggle('fa-eye');
+                    eyeIcon.classList.toggle('fa-eye-slash');
+                });
+            }
+            
+            // Initialize AOS
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out'
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .auth-icon {
+            font-size: 3rem;
+            color: var(--primary-light);
+            margin-bottom: 1rem;
+        }
+        
+        .auth-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+        }
+        
+        .input-group-text {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-color: var(--border-color);
+            color: var(--primary-light);
+        }
+        
+        .toggle-password {
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-color: var(--border-color);
+            color: var(--text-light);
+        }
+        
+        .toggle-password:hover {
+            color: var(--primary-light);
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            min-height: 21px;
+        }
+        
+        .user-count {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-direction: column;
+        }
+        
+        .user-count-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-count-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            background: linear-gradient(45deg, var(--primary-light), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .auth-link {
+            color: var(--primary-light);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-link:hover {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+    </style>
 </body>
 </html>

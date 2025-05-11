@@ -1,38 +1,162 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
-<body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/login">Back To Login</a>
+<body class="modern-background">
+    <!-- Page loader is included from fragments -->
+    
+    <div class="content-wrapper">
+        <div class="auth-container" data-aos="fade-up" data-aos-delay="200">
+            <div class="text-center mb-4">
+                <i class="fas fa-user-plus auth-icon"></i>
+                <h1 class="auth-title">
+                    Create <span class="highlight">Account</span>
+                </h1>
+                <p class="auth-subtitle">Join DarroTech's EZ Planner today</p>
+            </div>
+            
+            <form method="post" class="needs-validation" novalidate>
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            th:field="${registerFormDTO.username}" 
+                            placeholder="Username"
+                            required>
+                    </div>
+                    <div class="error-message" th:errors="${registerFormDTO.username}"></div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            th:field="${registerFormDTO.password}" 
+                            id="password"
+                            placeholder="Password"
+                            required>
+                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" th:errors="${registerFormDTO.password}"></div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            th:field="${registerFormDTO.verifyPassword}" 
+                            id="verifyPassword"
+                            placeholder="Confirm Password"
+                            required>
+                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="verifyPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" th:errors="${registerFormDTO.verifyPassword}"></div>
+                </div>
+                
+                <div class="d-grid gap-2 mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </button>
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="/login" class="auth-link">Sign in</a></p>
+            </div>
         </div>
     </div>
-</nav>
-<h1 style="text-align:center;">"Darro Tech's" EZ Planner Application</h1>
-<div style="text-align:center">
-    <form method="post">
-        <div class="form-group">
-            <label>Username
-                <input class="form-control" th:field="${registerFormDTO.username}"/>
-            </label>
-            <p style="color:red;" class="error" th:errors="${registerFormDTO.username}"></p>
-        </div>
-        <div class="form-group">
-            <label>Password
-                <input class="form-control" th:field="${registerFormDTO.password}" type="password"/>
-            </label>
-            <p style="color:red;" class="error" th:errors="${registerFormDTO.password}"></p>
-        </div>
-        <div class="form-group">
-            <label>Verify Password
-                <input class="form-control" th:field="${registerFormDTO.verifyPassword}" type="password"/>
-            </label>
-            <p style="color:red;" class="error" th:errors="${registerFormDTO.verifyPassword}"></p>
-        </div>
-
-        <input type="submit" class="btn btn-primary btn-round" value="Register"/>
-    </form>
-</div>
+    
+    <!-- Include the footer -->
+    <footer th:replace="fragments :: footer"></footer>
+    
+    <script>
+        // Toggle password visibility
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButtons = document.querySelectorAll('.toggle-password');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const passwordField = document.getElementById(targetId);
+                    
+                    if (passwordField) {
+                        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordField.setAttribute('type', type);
+                        
+                        // Toggle eye icon
+                        const eyeIcon = this.querySelector('i');
+                        eyeIcon.classList.toggle('fa-eye');
+                        eyeIcon.classList.toggle('fa-eye-slash');
+                    }
+                });
+            });
+            
+            // Initialize AOS
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out'
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .auth-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .auth-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+        }
+        
+        .input-group-text {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-color: var(--border-color);
+            color: var(--primary-light);
+        }
+        
+        .toggle-password {
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-color: var(--border-color);
+            color: var(--text-light);
+        }
+        
+        .toggle-password:hover {
+            color: var(--primary-light);
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            min-height: 21px;
+        }
+        
+        .auth-link {
+            color: var(--accent-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-link:hover {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+    </style>
 </body>
 </html>
