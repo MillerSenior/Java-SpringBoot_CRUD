@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 /**
  * Created by Chris Bay
  */
 @Controller
-@RequestMapping("eventCategories")
+@RequestMapping("/eventCategories")
 public class EventCategoryController {
     @Autowired
     private AuthenticationController authenticationController;
@@ -27,7 +27,7 @@ public class EventCategoryController {
     @Autowired
     private EventCategoryRepository eventCategoryRepository;
 
-    @GetMapping
+    @GetMapping("")
     public String displayAllCategories(Model model, HttpSession session) {
         User user = authenticationController.getUserFromSession(session);//for complete authentication, also HttpSession
         model.addAttribute("title", "All Categories");
@@ -35,27 +35,27 @@ public class EventCategoryController {
         return "eventCategories/index";
     }
 
-    @GetMapping("create")
+    @GetMapping("/create")
     public String renderCreateEventCategoryForm(Model model) {
         model.addAttribute("title", "Create Category");
-        model.addAttribute(new EventCategory());
+        model.addAttribute("eventCategory", new EventCategory());
         return "eventCategories/create";
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public String processCreateEventCategoryForm(@Valid @ModelAttribute EventCategory eventCategory,
                                                  Errors errors, Model model, HttpSession session) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Create Category");
-            model.addAttribute(new EventCategory());
+            model.addAttribute("eventCategory", eventCategory);
             model.addAttribute("errorMsg", "Category name required!");
             return "eventCategories/create";
         }
         User user = authenticationController.getUserFromSession(session);
         eventCategory.setUser(user);
         eventCategoryRepository.save(eventCategory);
-        return "redirect:";
+        return "redirect:/eventCategories";
     }
 
 }

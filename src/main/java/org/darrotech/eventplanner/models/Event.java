@@ -1,45 +1,80 @@
 package org.darrotech.eventplanner.models;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
-public class Event extends AbstractEntity implements Comparable<Event> {
+@Table(name = "events")
+public class Event implements Comparable<Event> {
 
-    @OneToMany(mappedBy = "event")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<BudgetItems> budgetItemsList = new ArrayList<>();
 
-    @ManyToOne//for authentication/new/getter and setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotBlank(message = "Name is required.")
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters.")
+    @Column(nullable = false)
     private String name;
 
-    @ManyToOne//I can have many events in one category
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     @NotNull(message = "Category is required")
     private EventCategory eventCategory;
 
-    @ManyToMany//many events can have many tags
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "event_tags",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private final List<Tag> tags = new ArrayList<>();
 
-
-    @OneToOne(cascade = CascadeType.ALL)//one set of details to one event
     @Valid
     @NotNull
-    private EventDetails eventDetails;
-
-    @Valid
-    @NotNull
+    @Column(precision = 10, scale = 2)
     private BigDecimal budget = new BigDecimal("0.0");
 
     @Valid
     @NotNull
+    @Column(precision = 10, scale = 2)
     private BigDecimal balance = new BigDecimal("0.0");
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "event_details_id")
+    @Valid
+    @NotNull
+    private EventDetails eventDetails;
+
+    public Event() {
+    }
 
     public Event(User user, String name, EventCategory eventCategory, EventDetails eventDetails, BigDecimal budget, BigDecimal balance) {
         this.user = user;
@@ -50,23 +85,22 @@ public class Event extends AbstractEntity implements Comparable<Event> {
         this.balance = balance;
     }
 
-    /*
-     A no-arg constructor has been created. It simply sets the id of the object, leaving all other fields null.
-            The previously-existing constructor now calls this(), which calls the no-arg constructor to set the id before setting the values of all other fields.
-    
-             */
-    public Event() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public BigDecimal getBalance() {
-        this.balance=balance.add(getBudget().subtract(getTotalSpent()));
-        return balance;
+        return getBudget().subtract(getTotalSpent());
     }
+
     public BigDecimal getTotalSpent() {
         BigDecimal total = new BigDecimal("0.0");
-        //total=total.add(getBudget().subtract(getBalance()));
-        for (int i=0; i<getBudgetItemsList().size(); i++) {
-            total=total.add(getBudgetItemsList().get(i).getItemPrice());
+        for (BudgetItems item : getBudgetItemsList()) {
+            total = total.add(item.getItemPrice());
         }
         return total;
     }
@@ -75,8 +109,18 @@ public class Event extends AbstractEntity implements Comparable<Event> {
         this.balance = balance;
     }
 
+    public List<BudgetItems> getBudgetItems() {
+        return budgetItemsList;
+    }
+
     public List<BudgetItems> getBudgetItemsList() {
         return budgetItemsList;
+    }
+
+    public void addBudgetItem(BudgetItems budgetItem) {
+        budgetItem.setEvent(this);
+        this.budgetItemsList.add(budgetItem);
+        this.balance = getBalance();
     }
 
     public BigDecimal getBudget() {
@@ -88,7 +132,6 @@ public class Event extends AbstractEntity implements Comparable<Event> {
     }
 
     public String getName() {
-
         return name;
     }
 
@@ -128,12 +171,30 @@ public class Event extends AbstractEntity implements Comparable<Event> {
         this.user = user;
     }
 
-
     @Override
-    public int compareTo(Event obj) {//for alphabetization
-        return eventDetails.getFormattedDate().compareToIgnoreCase(obj.eventDetails.getFormattedDate());
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Event)) {
+            return false;
+        }
+        Event event = (Event) o;
+        return Objects.equals(getId(), event.getId());
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public int compareTo(Event obj) {
+        return this.eventDetails.getDate().compareTo(obj.getEventDetails().getDate());
+    }
 }
-

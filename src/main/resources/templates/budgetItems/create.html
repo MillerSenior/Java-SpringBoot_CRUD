@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="modern-background">
+<nav th:replace="fragments :: page-header"></nav>
+
+<div class="content-wrapper">
+    <div class="container">
+        <div class="content-container">
+            <div class="page-header">
+                <h1>Add Expense - <span th:text="${event.name}">Event Name</span></h1>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" th:action="@{/budgetItems/create(eventId=${event.id})}" th:object="${budgetItem}" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="itemName" class="form-label">Item Name</label>
+                            <input type="text" class="form-control" id="itemName" th:field="*{itemName}" placeholder="Enter item name">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="vendor" class="form-label">Vendor</label>
+                            <input type="text" class="form-control" id="vendor" th:field="*{vendor}" placeholder="Enter vendor name">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('vendor')}" th:errors="*{vendor}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="itemPrice" class="form-label">Price ($)</label>
+                            <input type="number" step="0.01" class="form-control" id="itemPrice" th:field="*{itemPrice}" placeholder="0.00">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <a th:href="@{/budgetItems(eventId=${event.id})}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Add Expense</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include the footer -->
+<footer th:replace="fragments :: footer"></footer>
+</body>
+</html> 

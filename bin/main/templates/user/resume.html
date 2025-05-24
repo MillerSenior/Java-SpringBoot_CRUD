@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+</head>
+
+<body class="container">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/login">Back To Login</a>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-sm-6"><h1>Anthony D. Miller Sr.</h1></div>
+<!--                <div class="col-sm-6"><img src="me.png" style="height: 250px; width: 200px;"></div>-->
+              </div>
+              
+            
+            <h4>Java Web Developer</h4>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p><b>Phone:</b> 314 555-5555</p>
+                </div>
+                <div class="col-sm-3">
+                    <p style="text-align: left;"><b>Email:</b> jjj@jjj.com</p>
+                </div>
+                <div class="col-sm-6">
+                    <!-- <img src="me.png" style="height: 200px;"> -->
+                </div>
+            </div>
+
+            <hr>
+            <p>Self-motivated developer, who is driven, focused, and has a desire to implement my skills in a way that works to combat the
+                things that inhibit people (from all walks of life and every age group) from understanding one another.
+                Beginning by raising the
+                community’s awareness of it’s members who are doing positive things, and who are striving to make the
+                overall atmosphere of
+                their envoronment better.</p>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-3">
+                <h2>Languages</h2>
+                <ul>
+                    <li>Python</li>
+                    <li>Java</li>
+                    <li>Java Script</li>
+                    <li>Type Script</li>
+                    <li>SQL</li>
+                    <li>JSON</li>
+                    <li>HTML 5</li>
+                    <li>CSS 3</li>
+                </ul>
+            </div>
+            <div class="col-sm-3">
+                <h2>Frameworks</h2>
+                <ul>
+                    <li>Node</li>
+                    <li>Angular</li>
+                    <li>Spring Boot</li>
+                    <li>Spring JPA</li>
+                    <li>Flask</li>
+                    <li>Thymeleaf</li>
+                    <li>SQL Alchemy</li>
+                    <li>Jinja</li>
+                </ul>
+            </div>
+            <div class="col-sm-3">
+                <h2>Databases</h2>
+                <ul>
+                    <li>MySQL</li>
+                    <li>PyMySQL</li>
+                </ul>
+            </div>
+            <div class="col-sm-3">
+                <h2>Tools</h2>
+                <ul>
+                    <li>VS Code</li>
+                    <li>IntelliJ</li>
+                    <li>Firefox</li>
+                    <li>Git</li>
+                    <li>Microsoft Office</li>
+                    <li>BobCad</li>
+                    <li>AutoCad</li>
+                    <li>CNC</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <h2 style="text-align: center;">Project Experience</h2>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">
+            <h6>LiftOff Project: LaunchCode Administration Registry</h6>
+            <ul>
+                <li>Created a Java Spring MVC based webapp to make it easier for LaunchCode Side Administrators to keep
+                    track of all
+                    program and student information.</li>
+                <li>Designed a SQL database to hold data points for LaunchCode Site Administrator’s student enrollment,
+                    student
+                    status, student attendance, and LaunchCode library inventory.</li>
+            </ul>
+            <h6>LiftOff Project: Never Forget Again</h6>
+            <ul>
+                <li>Created a memory based Java Spring MVC based webapp to make it easier for individuals to categorize
+                    and keep
+                    track of past and future instances that they would like to commit to memory.</li>
+                <li>Designed a SQL database to hold data points for the Never Forget Again Application’s user
+                    information, category
+                    information, details, and tags.</li>
+            </ul>
+        </div>
+        <div class="col-sm-6">
+            <h6>LiftOff Project: For All Teachers Application</h6>
+            <ul>
+                <li>
+                    Created a Java Spring MVC based webapp to make it easier for teachers to keep track of all
+                    student/class
+                    information.
+                </li>
+                <li>
+                    Designed a SQL database to hold data points for the For All Teachers Application’s user
+                    information, student
+                    information, grades, and attendance.
+                </li>
+            </ul>
+
+            <h6>LiftOff Project: Business Communication Application</h6>
+            <ul>
+                <li>Created a dual purposed Python/Flask based web app to make it easier for customers to communicate
+                    with the businesses that they would like to patronize, while the businesses
+                    can showcase what it is they specifically specialize in.</li>
+                <li>Designed a PyMySQL database necessary to keep track of user and business related information.
+                </li>
+            </ul>
+        </div>
+    </div>
+<hr>
+<h2 style="text-align: center;">Work Experience</h2>
+<p><b>● Teaching Assistant</b>, LaunchCode, Jefferson City, MO , Winter/Spring 2023</p>
+<p>- Assisting the Lead Instructor in teaching LaunchCode’s Intro To Web Dev class</p>
+<p><b>● Personally contracted barber</b>, MO, 2004-current</p>
+<p>-Barber cutting all styles and types of hair.</p>
+<p><b>● CNC Operator</b>, Missouri Vocational Enterprises, Bowling Green, MO, 2020-2021</p>
+<p>-Using BobCad operated CNC controlled routers to make various forms of wooden panels.</p>
+<p><b>● Office Clerk/CNC Operator</b>, Missouri Vocational Enterprises, Charleston, MO, 2013 – 2014</p>
+<p>-Managing factory supply inventory. Using a Microsoft Office spreadsheet, I kept track of what supplies the company
+    purchased, how and when the supplies were used, and when it was time for the company to order more supplies.
+    Using AutoCad, and BobCad, operated CNC controlled routers to make various forms of wooden furniture.</p>
+<hr>
+<h2 style="text-align: center;">Education</h2>
+<p><b>●Central Methodist University</b>, Business Administration - Current Student</p>
+<p><b>●LaunchCode</b>, LC101 Programming Course — 2022</p>
+<p><b>●U.S. Career Institute</b>, Personal Fitness Trainer and Nutritional Specialist — March, 2019</p>
+<p><b>●Blackstone Career Intstitue</b>, Legal Assistant/Paralegal — July, 2018</p>
+<p><b>●Charles Sumner High School</b>, St.Louis, MO – 2000</p>
+
+
+
+
+
+</body>
+
+</html>

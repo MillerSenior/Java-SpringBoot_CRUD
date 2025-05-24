@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 /**
  * Created by Chris Bay
  */
 @Controller
-@RequestMapping("tags")
+@RequestMapping("/tags")
 public class TagController {
 
     @Autowired
@@ -27,7 +27,7 @@ public class TagController {
     @Autowired
     private AuthenticationController authenticationController;
     //for complete authentication
-    @GetMapping
+    @GetMapping("")
     public String displayTags(Model model, HttpSession session) {
         User user = authenticationController.getUserFromSession(session);//for complete authentication, also HttpSession
         model.addAttribute("title", "All Tags");
@@ -35,25 +35,26 @@ public class TagController {
         return "tags/index";
     }
 
-    @GetMapping("create")
+    @GetMapping("/create")
     public String displayCreateTagForm(Model model) {
         model.addAttribute("title", "Create Tag");
-        model.addAttribute(new Tag());
+        model.addAttribute("tag", new Tag());
         return "tags/create";
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public String processCreateTagForm(@ModelAttribute @Valid Tag tag,
                                        Errors errors, Model model, HttpSession session) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Create Tag");
-            model.addAttribute(tag);
+            model.addAttribute("tag", tag);
+            model.addAttribute("errorMsg", "Complete the tag field!");
             return "tags/create";
         }
         User user = authenticationController.getUserFromSession(session);
         tag.setUser(user);
         tagRepository.save(tag);
-        return "redirect:";
+        return "redirect:/tags";
     }
 }

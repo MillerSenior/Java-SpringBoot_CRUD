@@ -3,11 +3,8 @@ package org.darrotech.eventplanner.models.dto;
 import org.darrotech.eventplanner.models.Event;
 import org.darrotech.eventplanner.models.Tag;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
-/**
- * Created by Chris Bay
- */
 //wraps together the event and tag classes, allows us to tie together in a bundle
 public class EventTagDTO {
 
@@ -18,7 +15,8 @@ public class EventTagDTO {
     private Tag tag;
 
     //empty constructor
-    public EventTagDTO() {}
+    public EventTagDTO() {
+    }
 
     public Event getEvent() {
         return event;

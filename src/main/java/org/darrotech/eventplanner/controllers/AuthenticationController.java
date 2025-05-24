@@ -1,5 +1,7 @@
 package org.darrotech.eventplanner.controllers;
 
+import java.util.Optional;
+
 import org.darrotech.eventplanner.data.UserRepository;
 import org.darrotech.eventplanner.models.User;
 import org.darrotech.eventplanner.models.dto.LoginFormDTO;
@@ -8,23 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.util.Optional;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
-/**
- * Created by Chris Bay
- */
 @Controller
 public class AuthenticationController {
 
     @Autowired
     UserRepository userRepository;
 
-    private static final String userSessionKey = "templates/user";
+    private static final String userSessionKey = "user";
 
     public User getUserFromSession(HttpSession session) {
         Integer userId = (Integer) session.getAttribute(userSessionKey);
@@ -54,8 +54,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public String processRegistrationForm(@ModelAttribute @Valid RegisterFormDTO registerFormDTO,
-                                          Errors errors, HttpServletRequest request,
-                                          Model model) {
+            Errors errors, HttpServletRequest request,
+            Model model) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Register");
@@ -67,22 +67,31 @@ public class AuthenticationController {
         if (existingUser != null) {
             errors.rejectValue("username", "username.alreadyexists", "A user with that username already exists");
             model.addAttribute("title", "Register");
+            model.addAttribute("registerFormDTO", registerFormDTO);
             return "register";
         }
-
+    
         String password = registerFormDTO.getPassword();
         String verifyPassword = registerFormDTO.getVerifyPassword();
         if (!password.equals(verifyPassword)) {
             errors.rejectValue("password", "passwords.mismatch", "Passwords do not match");
             model.addAttribute("title", "Register");
+            model.addAttribute("registerFormDTO", registerFormDTO);
             return "register";
         }
-
-        User newUser = new User(registerFormDTO.getUsername(), registerFormDTO.getPassword());
-        userRepository.save(newUser);
-        setUserInSession(request.getSession(), newUser);
-
-        return "redirect:";
+    
+        try {
+            User newUser = new User(registerFormDTO.getUsername(), registerFormDTO.getPassword());
+            userRepository.save(newUser);
+            setUserInSession(request.getSession(), newUser);
+            return "redirect:";
+        } catch (Exception e) {
+            // Handle database constraint violation
+            errors.rejectValue("username", "username.alreadyexists", "A user with that username already exists");
+            model.addAttribute("title", "Register");
+            model.addAttribute("registerFormDTO", registerFormDTO);
+            return "register";
+        }
     }
 
     @GetMapping("/login")
@@ -95,8 +104,8 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public String processLoginForm(@ModelAttribute @Valid LoginFormDTO loginFormDTO,
-                                   Errors errors, HttpServletRequest request,
-                                   Model model) {
+            Errors errors, HttpServletRequest request,
+            Model model) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Log In");
@@ -127,7 +136,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request){
+    public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
         return "redirect:/login";
     }

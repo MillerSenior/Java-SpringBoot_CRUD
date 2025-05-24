@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<nav th:replace="fragments :: page-header"></nav>
+<h1 style="text-align:center;" th:text="${title}"></h1>
+<div class="row text-center">
+    <div class="col-sm-3"><h5 th:text="${'Event Budget: $'+event.budget}"></h5></div>
+    <div class="col-sm-3"><h5 th:text="${'Expense Total: $'+totalSpent}"></h5></div>
+    <div class="col-sm-3"><h5 th:text="${'Spendable Balance: $'+balance}"></h5></div>
+    <div class="col-sm-3"><h5><a style="font-size:125%" th:href="'/budgetItems/addItem?eventId=' + ${event.id}">Add Expense</a></h5></div>
+</div>
+<table class="table table-striped">
+    <tr>
+        <th>Item ID:</th>
+        <th>Item Name:</th>
+        <th>Item Price:</th>
+        <th>Item Edit:</th>
+        <th>Item Delete:</th>
+    </tr>
+    <tr th:each="item : ${budgetItems}">
+
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.itemName}"></td>
+        <td th:text="${'$'+item.itemPrice}"></td>
+        <td><a style="font-size:125%" th:href="@{/budgetItems/edit/{id}(id=${item.id})}">Edit Item Info</a></td>
+        <td><a style="font-size:125%" th:href="@{/budgetItems/deleteExpense/{id}(id=${item.id})}">Delete Item</a>
+        </td>
+    </tr>
+</table>
+
+<div class="container text-center"><a th:href="'/events/detail?eventId=' + ${event.id}" th:text="${'Back To: '+event.name}"></a></div>
+
+
+
+</body>
+</html>

@@ -1,9 +1,10 @@
 package org.darrotech.eventplanner.controllers;
 
+import java.util.Optional;
+
 import org.darrotech.eventplanner.data.BudgetItemRepository;
-import org.darrotech.eventplanner.data.EventCategoryRepository;
 import org.darrotech.eventplanner.data.EventRepository;
-import org.darrotech.eventplanner.data.TagRepository;
+import org.darrotech.eventplanner.data.UserRepository;
 import org.darrotech.eventplanner.models.BudgetItems;
 import org.darrotech.eventplanner.models.Event;
 import org.darrotech.eventplanner.models.User;
@@ -11,144 +12,106 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.util.Optional;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("budgetItems")
+@RequestMapping("budget")
 public class BudgetController {
+
     @Autowired
     private BudgetItemRepository budgetItemRepository;
+
     @Autowired
     private EventRepository eventRepository;
+
     @Autowired
-    private EventCategoryRepository eventCategoryRepository;
-    @Autowired
-    TagRepository tagRepository;
+    private UserRepository userRepository;
+
     @Autowired
     private AuthenticationController authenticationController;
-    //for complete authentication
 
-    @GetMapping("addItem")
+    @GetMapping("add")
     public String displayAddItemForm(@RequestParam Integer eventId, Model model, HttpSession session) {
-        User user = authenticationController.getUserFromSession(session);//for complete authentication, also HttpSession
-        Optional<Event> optional = eventRepository.findById(eventId);
-        Event event = optional.get();
-        model.addAttribute("title", "Add Item");
-        model.addAttribute("eventId", eventId);
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        model.addAttribute("title", "Add Budget Item to: " + event.getName());
+        model.addAttribute("event", event);
         model.addAttribute(new BudgetItems());
-        return "budget/addItem";
+        return "budget/add";
     }
 
-    @PostMapping("addItem")
+    @PostMapping("add")
     public String processCreateForm(@RequestParam Integer eventId, @ModelAttribute @Valid BudgetItems budgetItems,
-                                    Errors errors, Model model, HttpSession session) {
-        User user = authenticationController.getUserFromSession(session);//for complete authentication, also HttpSession
-        Optional<Event> optional = eventRepository.findById(eventId);
-        Event event = optional.get();
-        try {
-            if (errors.hasErrors()) {
-                model.addAttribute("title", "Add Item");
-                model.addAttribute(event);
-                model.addAttribute(budgetItems);
-                model.addAttribute("errorMsg", "Price entry error: Must be numerical/monetary/decimal value.");
-                return "budget/addItem";
-                //return "redirect:/budgetItems/addItem?eventId=" + eventId;
-            }
-        } catch (Exception e) {
-            model.addAttribute("title", "Add Item");
-            model.addAttribute(event);
-            model.addAttribute(budgetItems);
-            System.out.println(e.getMessage());
-            //this is the handler being caught by the invalid data entry
-            model.addAttribute("errorMsg", "Price entry error: Must be numerical/monetary/decimal value.");
-            //return "redirect:/budgetItems/addItem?eventId=" + eventId;
-            return "budget/addItem";
+            Errors errors, Model model, HttpSession session) {
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        User user = authenticationController.getUserFromSession(session);
 
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Budget Item to: " + event.getName());
+            model.addAttribute("event", event);
+            return "budget/add";
         }
 
         budgetItems.setEvent(event);
         budgetItems.setUser(user);
         budgetItemRepository.save(budgetItems);
-
-        return "redirect:/budgetItems/detail?eventId=" + eventId;
+        return "redirect:/events/detail?eventId=" + event.getId();
     }
 
     @GetMapping("detail")
     public String displayEventDetails(@RequestParam Integer eventId, Model model, HttpSession session) {
-        User user = authenticationController.getUserFromSession(session);
         Optional<Event> result = eventRepository.findById(eventId);
-
-        if (result.isEmpty()) {
-            model.addAttribute("title", "Invalid Event ID: " + eventId);
-        } else {
-            Event event = result.get();
-            model.addAttribute("title", "Budget Details for: " + event.getName());
-            model.addAttribute("event", event);
-            model.addAttribute("budgetItems", event.getBudgetItemsList());
-            model.addAttribute("totalSpent", event.getTotalSpent());
-            model.addAttribute("balance", event.getBalance());
-        }
-
-        return "budget/budgetList";
+        Event event = result.get();
+        model.addAttribute("title", "Budget Details for: " + event.getName());
+        model.addAttribute("event", event);
+        model.addAttribute("budgetItems", event.getBudgetItems());
+        return "budget/detail";
     }
 
-    @GetMapping("deleteExpense/{budgetItemsID}")
-    public String displayDeleteExpenseForm(Model model, @PathVariable int budgetItemsID) {
-        Optional<BudgetItems> b = budgetItemRepository.findById(budgetItemsID);
-        BudgetItems budgetItems = b.get();
-        model.addAttribute("budgetItems", budgetItems);
-        model.addAttribute("title", "Delete Expense");
+    @GetMapping("delete")
+    public String displayDeleteForm(@RequestParam Integer eventId, Model model) {
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        model.addAttribute("title", "Delete Budget Items for: " + event.getName());
+        model.addAttribute("event", event);
+        model.addAttribute("budgetItems", event.getBudgetItems());
         return "budget/delete";
     }
 
-    @PostMapping("deleteExpense")
-    public String processAssignmentDeleteForm(@RequestParam(required = false) int[] budgetItemsId, @RequestParam Integer eventId) {
-        Optional<Event> optional = eventRepository.findById(eventId);
-        Event event = optional.get();
-        if (budgetItemsId != null) {
-            for (int id : budgetItemsId) {
+    @PostMapping("delete")
+    public String processDeleteForm(@RequestParam(required = false) int[] budgetIds) {
+        if (budgetIds != null) {
+            for (int id : budgetIds) {
                 budgetItemRepository.deleteById(id);
-
             }
         }
-        return "redirect:/budgetItems/detail?eventId=" + eventId;
+        return "redirect:";
     }
 
-
-    @GetMapping("edit/{budgetItemsId}")
-    public String editAssignmentInfo(Model model, @PathVariable int budgetItemsId) {
-        Optional<BudgetItems> b = budgetItemRepository.findById(budgetItemsId);
-        BudgetItems budgetItems = b.get();
+    @GetMapping("edit/{budgetId}")
+    public String displayEditForm(Model model, @RequestParam Integer budgetId) {
+        Optional<BudgetItems> budgetItem = budgetItemRepository.findById(budgetId);
+        BudgetItems budgetItems = budgetItem.get();
+        model.addAttribute("title", "Edit Budget Item: " + budgetItems.getItemName());
         model.addAttribute("budgetItems", budgetItems);
-        model.addAttribute("title", "Update expense information for: " + budgetItems.getEvent().getName());
-
-        System.out.println(budgetItems.getId());
         return "budget/edit";
     }
 
     @PostMapping("edit")
     public String processEditAssignmentInfo(@ModelAttribute @Valid BudgetItems newBudgetItems, Errors errors, Model model, HttpSession session, Event newEvent) {
-        User user = authenticationController.getUserFromSession(session);
-        int eventId = newBudgetItems.getEvent().getId();
-        //Optional<Student> optional = studentRepository.findById(newStudent.getId());
-        Optional<Event> optional = eventRepository.findById(eventId);
-        Event event = optional.get();
         if (errors.hasErrors()) {
-            model.addAttribute("title", "Update event information for: " + event.getName());
-            model.addAttribute(event);
-            model.addAttribute(newBudgetItems);
-            model.addAttribute("errorMsg", "Price entry error: Must be numerical/monetary/decimal value.");
+            model.addAttribute("title", "Edit Budget Item: " + newBudgetItems.getItemName());
             return "budget/edit";
         }
-        newBudgetItems.setUser(user);
-        newBudgetItems.setEvent(newBudgetItems.getEvent());
         budgetItemRepository.save(newBudgetItems);
-
-        //return "redirect:/students/detail?studentId=" + newStudent.getId();
-        return "redirect:/budgetItems/detail?eventId=" + eventId;
+        return "redirect:/events/detail?eventId=" + newBudgetItems.getEvent().getId();
     }
 }
