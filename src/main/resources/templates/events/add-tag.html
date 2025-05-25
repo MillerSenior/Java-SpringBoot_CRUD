@@ -1,70 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
-<body>
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="~{fragments/header :: head(title=${title})}">
-    <title>Add Tag</title>
-</head>
-<body>
-    <div th:replace="~{fragments/header :: header}"></div>
-    
-    <div class="container mt-4 mb-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0" th:text="${title}">Add Tag</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" th:object="${eventTag}">
-                            <div class="mb-3">
-                                <label for="tag" class="form-label">Select Tag</label>
-                                <select class="form-select" id="tag" th:field="*{tag}">
-                                    <option value="">-- Select a tag --</option>
-                                    <option th:each="tag : ${tags}" 
-                                            th:value="${tag.id}" 
-                                            th:text="${tag.name}">Tag Name</option>
-                                </select>
-                            </div>
-                            <input type="hidden" th:field="*{event.id}" />
-                            <div class="d-flex justify-content-between">
-                                <a th:href="@{/events/detail(eventId=${event.id})}" class="btn btn-secondary">Cancel</a>
-                                <button type="submit" class="btn btn-primary">Add Tag</button>
-                            </div>
-                        </form>
-                    </div>
+<body class="modern-background">
+<nav th:replace="fragments :: page-header"></nav>
+
+<div class="content-wrapper">
+    <div class="container">
+        <div class="content-container">
+            <div class="page-header">
+                <h1 th:text="${title}">Add Tag</h1>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Select Tag</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="form-floating">
+                        <input type="hidden" th:field="${eventTag.event}" />
+                        <div class="form-group mb-4">
+                            <label class="form-label">Tag:</label>
+                            <select class="form-select" th:field="${eventTag.tag}">
+                                <option th:each="tag : ${tags}"
+                                        th:value="${tag.id}"
+                                        th:text="${tag.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-tag me-2"></i>Add Tag
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div th:replace="~{fragments/header :: footer}"></div>
-</body>
-</html>
-<nav th:replace="fragments :: page-header"></nav>
-<div>
-    <br>
-    <br>
 </div>
-<div class="container body-content">
-<h1 style="text-align:center;" th:text="${title}"></h1>
-<div class="form-group" style="text-align:center;">
-    <form method="post">
-        <input type="hidden" th:field="${eventTag.event}">
-        <div class="form-group">
-            <label>Tag:</label>
-            <select class="form-control" th:field="${eventTag.tag}">
-                <option th:each="tag : ${tags}"
-                        th:value="${tag.id}"
-                        th:text="${tag.name}"
-                ></option>
-            </select>
-        </div>
-        <input type="submit" class="btn btn-primary btn-round" value="Add Tag">
-    </form>
-</div>
-</div>
+
+<footer th:replace="fragments :: footer"></footer>
 </body>
 </html>

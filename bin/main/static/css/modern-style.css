@@ -30,8 +30,9 @@
 
 /* ======= Base Styles ======= */
 html, body {
-    min-height: 100vh;
-    scroll-behavior: smooth;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -42,9 +43,11 @@ body {
         radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.1) 0%, transparent 20%),
         radial-gradient(circle at 85% 60%, rgba(114, 9, 183, 0.1) 0%, transparent 30%);
     line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    padding-top: 70px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 70px; /* Height of navbar */
+    padding-bottom: 80px; /* Height of footer */
+    min-height: 100vh;
     overflow-x: hidden;
 }
 
@@ -73,6 +76,7 @@ a:hover {
     letter-spacing: 0.3px;
     position: relative;
     overflow: hidden;
+    margin: 0.5rem;
 }
 
 .btn-primary {
@@ -102,14 +106,18 @@ a:hover {
     font-size: 1.1rem;
 }
 
-/* ======= Navbar ======= */
+/* ======= Navbar Styles ======= */
 .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
     background-color: var(--glass-bg);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--glass-border);
-    padding: 0.8rem 1rem;
-    transition: all 0.3s ease;
+    z-index: 1030;
 }
 
 .navbar-brand {
@@ -312,7 +320,7 @@ a:hover {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: var(--soft-shadow);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     transition: all 0.3s ease;
 }
 
@@ -339,9 +347,14 @@ a:hover {
 }
 
 /* ======= Table Styles ======= */
+.table-responsive {
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
 .table {
     margin-bottom: 0;
-    color: var(--text-light);
 }
 
 .table th {
@@ -411,8 +424,9 @@ a:hover {
     border-radius: 12px;
     padding: 2rem;
     border: 1px solid var(--border-color);
-    margin-top: 2rem;
+    margin: 0 auto 1.5rem;
     box-shadow: var(--soft-shadow);
+    max-width: 1200px;
 }
 
 .page-header {
@@ -471,6 +485,32 @@ a:hover {
     .feature-card {
         margin-bottom: 1.5rem;
     }
+    
+    .content-wrapper {
+        padding: 1rem;
+        margin-bottom: 100px; /* Extra space for footer on mobile */
+    }
+    
+    .content-container {
+        margin: 0 1rem 1.5rem;
+        padding: 1.5rem;
+    }
+    
+    .card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    .btn {
+        margin: 0.25rem;
+    }
+    
+    .table-responsive {
+        margin-bottom: 1rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -487,12 +527,14 @@ a:hover {
 /* ======= Login and Register Pages ======= */
 .auth-container {
     max-width: 450px;
-    margin: 3rem auto;
+    margin: 2rem auto;
     padding: 2rem;
     background-color: var(--card-bg);
     border-radius: 12px;
     border: 1px solid var(--border-color);
     box-shadow: var(--box-shadow);
+    position: relative;
+    z-index: 1;
 }
 
 .auth-title {
@@ -508,21 +550,24 @@ a:hover {
 }
 
 /* ======= Custom Scrollbar ======= */
-::-webkit-scrollbar {
+.content-wrapper::-webkit-scrollbar,
+.content-container::-webkit-scrollbar {
     width: 8px;
-    height: 8px;
 }
 
-::-webkit-scrollbar-track {
+.content-wrapper::-webkit-scrollbar-track,
+.content-container::-webkit-scrollbar-track {
     background: var(--darker-bg);
 }
 
-::-webkit-scrollbar-thumb {
+.content-wrapper::-webkit-scrollbar-thumb,
+.content-container::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.content-wrapper::-webkit-scrollbar-thumb:hover,
+.content-container::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.3);
 }
 
@@ -587,11 +632,6 @@ a:hover {
 }
 
 /* ======= Ripple Effect ======= */
-.btn {
-    position: relative;
-    overflow: hidden;
-}
-
 .ripple-effect {
     position: absolute;
     border-radius: 50%;
@@ -817,40 +857,30 @@ html {
     height: 100%;
 }
 
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding-top: 70px; /* Account for fixed navbar */
-    padding-bottom: 0;
-    overflow-x: hidden;
-}
-
 .content-wrapper {
     flex: 1;
-    display: flex;
-    flex-direction: column;
     width: 100%;
-    height: calc(100vh - 70px - 80px); /* Exact viewport height minus navbar and footer */
-    max-height: calc(100vh - 70px - 80px);
-    overflow-y: auto; /* Allow scrolling within content if needed */
-    padding-bottom: 0;
+    min-height: calc(100vh - 150px); /* viewport height minus navbar and footer */
+    padding: 1.5rem 0;
+    margin-bottom: 80px; /* Match footer height */
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* ======= Footer Styles ======= */
 .app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
     background-color: var(--glass-bg);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border-top: 1px solid var(--glass-border);
+    z-index: 1020;
     padding: 1rem 0;
-    width: 100%;
-    height: 80px; /* Fixed height for footer */
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    z-index: 1000;
 }
 
 .footer-brand {

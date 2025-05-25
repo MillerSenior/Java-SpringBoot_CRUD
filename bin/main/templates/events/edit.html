@@ -1,163 +1,165 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="~{fragments/header :: head(title=${title})}">
-    <title>Edit Event</title>
-</head>
-<body class="bg-light">
-    <div th:replace="~{fragments/header :: header}"></div>
-    
-    <div class="container mt-4 mb-5">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="h4 mb-0" th:text="${title}">Edit Event</h2>
+<head th:replace="fragments :: head"></head>
+<body class="modern-background">
+<nav th:replace="fragments :: page-header"></nav>
+
+<div class="content-wrapper">
+    <div class="container">
+        <div class="content-container">
+            <div class="page-header">
+                <h1 th:text="${title}">Edit Event</h1>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Edit Event Details</h2>
+                </div>
+                
+                <div class="card-body">
+                    <div th:if="${errorMsg}" class="alert alert-danger">
+                        <p class="mb-0" th:text="${errorMsg}"></p>
                     </div>
                     
-                    <div class="card-body">
-                        <div th:if="${errorMsg}" class="alert alert-danger">
-                            <p class="mb-0" th:text="${errorMsg}"></p>
+                    <form method="post" th:action="@{/events/edit}" th:object="${event}" class="needs-validation" novalidate>
+                        <input type="hidden" th:field="*{id}" />
+                        <input type="hidden" th:each="tag : ${tags}" th:value="${tag.displayName}" name="tag">
+                        
+                        <!-- Basic Information -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Basic Information</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Event Name</label>
+                                    <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="eventCategory" class="form-label">Category</label>
+                                    <select class="form-select" id="eventCategory" th:field="*{eventCategory}" required>
+                                        <option value="">Select a category</option>
+                                        <option th:each="category : ${categories}" 
+                                                th:value="${category.id}" 
+                                                th:text="${category.name}">Category Name</option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('eventCategory')}" th:errors="*{eventCategory}"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="budget" class="form-label">Budget ($)</label>
+                                    <input type="number" class="form-control" id="budget" th:field="*{budget}" step="0.01" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('budget')}" th:errors="*{budget}"></div>
+                                    <div class="invalid-feedback" th:if="${errorMsg}" th:text="${errorMsg}"></div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <form method="post" th:action="@{/events/edit}" th:object="${event}" class="needs-validation" novalidate>
-                            <input type="hidden" th:field="*{id}" />
-                            <input type="hidden" th:each="tag : ${tags}" th:value="${tag.displayName}" name="tag">
-                            
-                            <!-- Basic Information -->
-                            <div class="mb-4">
-                                <h5 class="border-bottom pb-2">Basic Information</h5>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="name" class="form-label">Event Name</label>
-                                        <input type="text" class="form-control" id="name" th:field="*{name}" required>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="eventCategory" class="form-label">Category</label>
-                                        <select class="form-select" id="eventCategory" th:field="*{eventCategory}" required>
-                                            <option value="">Select a category</option>
-                                            <option th:each="category : ${categories}" 
-                                                    th:value="${category.id}" 
-                                                    th:text="${category.name}">Category Name</option>
-                                        </select>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('eventCategory')}" th:errors="*{eventCategory}"></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="budget" class="form-label">Budget ($)</label>
-                                        <input type="number" class="form-control" id="budget" th:field="*{budget}" step="0.01" required>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('budget')}" th:errors="*{budget}"></div>
-                                        <div class="invalid-feedback" th:if="${errorMsg}" th:text="${errorMsg}"></div>
-                                    </div>
+                        <!-- Date and Time -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Date and Time</h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="date" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="date" th:field="*{eventDetails.date}" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.date')}" th:errors="*{eventDetails.date}"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="startTime" class="form-label">Start Time</label>
+                                    <select class="form-select" id="startTime" th:field="*{eventDetails.startTime}" required>
+                                        <option th:each="time : ${#numbers.sequence(0, 23)}"
+                                                th:value="${time < 12 ? time + ' AM' : time == 12 ? '12 PM' : (time - 12) + ' PM'}"
+                                                th:text="${time < 12 ? time + ' AM' : time == 12 ? '12 PM' : (time - 12) + ' PM'}">
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.startTime')}" th:errors="*{eventDetails.startTime}"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="endTime" class="form-label">End Time</label>
+                                    <select class="form-select" id="endTime" th:field="*{eventDetails.endTime}" required>
+                                        <option th:each="time : ${#numbers.sequence(0, 23)}"
+                                                th:value="${time < 12 ? time + ' AM' : time == 12 ? '12 PM' : (time - 12) + ' PM'}"
+                                                th:text="${time < 12 ? time + ' AM' : time == 12 ? '12 PM' : (time - 12) + ' PM'}">
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.endTime')}" th:errors="*{eventDetails.endTime}"></div>
                                 </div>
                             </div>
-                            
-                            <!-- Date and Time -->
-                            <div class="mb-4">
-                                <h5 class="border-bottom pb-2">Date and Time</h5>
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label for="date" class="form-label">Date</label>
-                                        <input type="date" class="form-control" id="date" th:field="*{eventDetails.date}" required>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.date')}" th:errors="*{eventDetails.date}"></div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="startTime" class="form-label">Start Time</label>
-                                        <select class="form-select" id="startTime" th:field="*{eventDetails.startTime}" required>
-                                            <option th:each="time : ${#numbers.sequence(0, 23)}"
-                                                    th:value="${time < 12 ? time + ' AM' : time == 12 ? '12 PM' : (time - 12) + ' PM'}"
-                                                    th:text="${time < 12 ? time + ' AM' : time == 12 ? '12 PM' : (time - 12) + ' PM'}">
-                                            </option>
-                                        </select>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.startTime')}" th:errors="*{eventDetails.startTime}"></div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="endTime" class="form-label">End Time</label>
-                                        <select class="form-select" id="endTime" th:field="*{eventDetails.endTime}" required>
-                                            <option th:each="time : ${#numbers.sequence(0, 23)}"
-                                                    th:value="${time < 12 ? time + ' AM' : time == 12 ? '12 PM' : (time - 12) + ' PM'}"
-                                                    th:text="${time < 12 ? time + ' AM' : time == 12 ? '12 PM' : (time - 12) + ' PM'}">
-                                            </option>
-                                        </select>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.endTime')}" th:errors="*{eventDetails.endTime}"></div>
-                                    </div>
+                        </div>
+                        
+                        <!-- Location and Attendance -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Location and Attendance</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" th:field="*{eventDetails.location}" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.location')}" th:errors="*{eventDetails.location}"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="numberOfAttendees" class="form-label">Expected Attendance</label>
+                                    <input type="number" class="form-control" id="numberOfAttendees" th:field="*{eventDetails.numberOfAttendees}" min="1" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.numberOfAttendees')}" th:errors="*{eventDetails.numberOfAttendees}"></div>
                                 </div>
                             </div>
-                            
-                            <!-- Location and Attendance -->
-                            <div class="mb-4">
-                                <h5 class="border-bottom pb-2">Location and Attendance</h5>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="location" class="form-label">Location</label>
-                                        <input type="text" class="form-control" id="location" th:field="*{eventDetails.location}" required>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.location')}" th:errors="*{eventDetails.location}"></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="numberOfAttendees" class="form-label">Expected Attendance</label>
-                                        <input type="number" class="form-control" id="numberOfAttendees" th:field="*{eventDetails.numberOfAttendees}" min="1" required>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.numberOfAttendees')}" th:errors="*{eventDetails.numberOfAttendees}"></div>
+                        </div>
+                        
+                        <!-- Contact and Additional Details -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Additional Details</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="contactEmail" class="form-label">Contact Email</label>
+                                    <input type="email" class="form-control" id="contactEmail" th:field="*{eventDetails.contactEmail}" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.contactEmail')}" th:errors="*{eventDetails.contactEmail}"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input" type="checkbox" id="invitationOnly" th:field="*{eventDetails.invitationOnly}">
+                                        <label class="form-check-label" for="invitationOnly">Invitation Only Event</label>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <!-- Contact and Additional Details -->
-                            <div class="mb-4">
-                                <h5 class="border-bottom pb-2">Additional Details</h5>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="contactEmail" class="form-label">Contact Email</label>
-                                        <input type="email" class="form-control" id="contactEmail" th:field="*{eventDetails.contactEmail}" required>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.contactEmail')}" th:errors="*{eventDetails.contactEmail}"></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-check mt-4">
-                                            <input class="form-check-input" type="checkbox" id="invitationOnly" th:field="*{eventDetails.invitationOnly}">
-                                            <label class="form-check-label" for="invitationOnly">Invitation Only Event</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <label for="description" class="form-label">Description</label>
-                                        <textarea class="form-control" id="description" th:field="*{eventDetails.description}" rows="3" required></textarea>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.description')}" th:errors="*{eventDetails.description}"></div>
-                                    </div>
+                                <div class="col-12">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" th:field="*{eventDetails.description}" rows="3" required></textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.description')}" th:errors="*{eventDetails.description}"></div>
                                 </div>
                             </div>
-                            
-                            <input type="hidden" th:field="*{eventDetails.weekday}">
-                            
-                            <div class="d-flex justify-content-end gap-2 mt-4">
-                                <a th:href="@{/events/detail(eventId=${event.id})}" class="btn btn-secondary">Cancel</a>
-                                <button type="submit" class="btn btn-primary">Update Event</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        
+                        <input type="hidden" th:field="*{eventDetails.weekday}">
+                        
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/events}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Event</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div th:replace="~{fragments/header :: footer}"></div>
-    
-    <!-- Script to auto-calculate weekday from date -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateInput = document.getElementById('date');
-            const weekdayInput = document.querySelector('input[name="eventDetails.weekday"]');
-            
-            function updateWeekday() {
-                if (dateInput.value) {
-                    const date = new Date(dateInput.value);
-                    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                    weekdayInput.value = days[date.getDay()];
-                }
+</div>
+
+<footer th:replace="fragments :: footer"></footer>
+
+<!-- Script to auto-calculate weekday from date -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('date');
+        const weekdayInput = document.querySelector('input[name="eventDetails.weekday"]');
+        
+        function updateWeekday() {
+            if (dateInput.value) {
+                const date = new Date(dateInput.value);
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                weekdayInput.value = days[date.getDay()];
             }
-            
-            // Set initial value
-            updateWeekday();
-            
-            // Update on change
-            dateInput.addEventListener('change', updateWeekday);
-        });
-    </script>
+        }
+        
+        // Set initial value
+        updateWeekday();
+        
+        // Update on change
+        dateInput.addEventListener('change', updateWeekday);
+    });
+</script>
 </body>
 </html>
