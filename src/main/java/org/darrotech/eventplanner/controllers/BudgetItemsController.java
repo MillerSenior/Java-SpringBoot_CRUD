@@ -68,12 +68,12 @@ public class BudgetItemsController {
 
         model.addAttribute("title", "Add Expense - " + event.getName());
         model.addAttribute("event", event);
-        model.addAttribute("budgetItem", new BudgetItems());
+        model.addAttribute("budgetItems", new BudgetItems());
         return "budgetItems/create";
     }
 
     @PostMapping("/create")
-    public String processCreateBudgetItemForm(@ModelAttribute @Valid BudgetItems budgetItem,
+    public String processCreateBudgetItemForm(@ModelAttribute @Valid BudgetItems budgetItems,
             Errors errors,
             @RequestParam Integer eventId,
             Model model,
@@ -96,8 +96,13 @@ public class BudgetItemsController {
             return "budgetItems/create";
         }
 
-        event.addBudgetItem(budgetItem);
+        // Set up the relationships
+        budgetItems.setUser(user);
+        event.addBudgetItem(budgetItems); // This will also set the event on budgetItems
+
+        // Save the event which will cascade to the budget item
         eventRepository.save(event);
+
         return "redirect:/budgetItems?eventId=" + eventId;
     }
 

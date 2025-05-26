@@ -2,8 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
 <body class="modern-background">
-    <!-- Page loader is included from fragments -->
-    
     <div class="content-wrapper">
         <div class="auth-container" data-aos="fade-up" data-aos-delay="200">
             <div class="text-center mb-4">
@@ -75,9 +73,6 @@
         </div>
     </div>
     
-    <!-- Include the footer -->
-    <footer th:replace="fragments :: footer"></footer>
-    
     <script>
         // Toggle password visibility
         document.addEventListener('DOMContentLoaded', function() {
@@ -111,6 +106,31 @@
     </script>
     
     <style>
+        body {
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
         .auth-icon {
             font-size: 3rem;
             color: var(--accent-color);

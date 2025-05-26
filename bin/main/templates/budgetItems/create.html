@@ -13,22 +13,22 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form method="post" th:action="@{/budgetItems/create(eventId=${event.id})}" th:object="${budgetItem}" class="needs-validation" novalidate>
+                    <form method="post" th:action="@{/budgetItems/create(eventId=${event.id})}" th:object="${budgetItems}" class="needs-validation" novalidate>
                         <div class="mb-3">
                             <label for="itemName" class="form-label">Item Name</label>
-                            <input type="text" class="form-control" id="itemName" th:field="*{itemName}" placeholder="Enter item name">
+                            <input type="text" class="form-control" id="itemName" th:field="*{itemName}" required>
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label for="vendor" class="form-label">Vendor</label>
-                            <input type="text" class="form-control" id="vendor" th:field="*{vendor}" placeholder="Enter vendor name">
+                            <input type="text" class="form-control" id="vendor" th:field="*{vendor}" required>
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('vendor')}" th:errors="*{vendor}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label for="itemPrice" class="form-label">Price ($)</label>
-                            <input type="number" step="0.01" class="form-control" id="itemPrice" th:field="*{itemPrice}" placeholder="0.00">
+                            <input type="number" step="0.01" min="0" class="form-control" id="itemPrice" th:field="*{itemPrice}" required>
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}"></div>
                         </div>
 

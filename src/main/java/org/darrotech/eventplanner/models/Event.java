@@ -123,6 +123,12 @@ public class Event implements Comparable<Event> {
         this.balance = getBalance();
     }
 
+    public void removeBudgetItem(BudgetItems budgetItem) {
+        budgetItemsList.remove(budgetItem);
+        budgetItem.setEvent(null);
+        this.balance = getBalance();
+    }
+
     public BigDecimal getBudget() {
         return budget;
     }
