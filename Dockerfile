@@ -3,10 +3,13 @@ FROM gradle:8.5-jdk17 AS builder
 
 WORKDIR /app
 
-# Copy Gradle build scripts and wrapper with correct permissions
-COPY --chmod=0755 gradlew ./
+# Copy Gradle build scripts and wrapper
+COPY gradlew ./
 COPY build.gradle settings.gradle ./
 COPY gradle gradle/
+
+# Set execute permissions for gradlew
+RUN chmod +x ./gradlew
 
 # Pre-download dependencies
 RUN ./gradlew dependencies --no-daemon
