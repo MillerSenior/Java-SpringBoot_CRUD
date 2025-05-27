@@ -11,20 +11,28 @@
                 <h1>Create Event</h1>
             </div>
 
-            <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
-
             <div class="card">
                 <div class="card-body">
-                    <form method="post" th:action="@{/events/create}" th:object="${event}" class="needs-validation" novalidate>
+                    <form method="post" th:action="@{/events/create}" th:object="${event}">
+                        <!-- Global error messages -->
+                        <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+                        
+                        <!-- Form validation error summary -->
+                        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                            <ul class="mb-0">
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+
                         <div class="mb-3">
                             <label for="name" class="form-label">Event Name</label>
-                            <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Enter event name">
+                            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''" id="name" th:field="*{name}" placeholder="Enter event name">
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label for="eventCategory" class="form-label">Category</label>
-                            <select class="form-select" id="eventCategory" th:field="*{eventCategory}">
+                            <select class="form-select" th:classappend="${#fields.hasErrors('eventCategory')} ? 'is-invalid' : ''" id="eventCategory" th:field="*{eventCategory}">
                                 <option value="">Select a category</option>
                                 <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                             </select>
@@ -35,21 +43,21 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="date" class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="date" th:field="*{eventDetails.date}">
+                                    <input type="date" class="form-control" th:classappend="${#fields.hasErrors('eventDetails.date')} ? 'is-invalid' : ''" id="date" th:field="*{eventDetails.date}">
                                     <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.date')}" th:errors="*{eventDetails.date}"></div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="mb-3">
                                     <label for="startTime" class="form-label">Start Time</label>
-                                    <input type="text" class="form-control" id="startTime" th:field="*{eventDetails.startTime}" placeholder="e.g. 10 AM">
+                                    <input type="text" class="form-control" th:classappend="${#fields.hasErrors('eventDetails.startTime')} ? 'is-invalid' : ''" id="startTime" th:field="*{eventDetails.startTime}" placeholder="e.g. 10 AM">
                                     <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.startTime')}" th:errors="*{eventDetails.startTime}"></div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="mb-3">
                                     <label for="endTime" class="form-label">End Time</label>
-                                    <input type="text" class="form-control" id="endTime" th:field="*{eventDetails.endTime}" placeholder="e.g. 2 PM">
+                                    <input type="text" class="form-control" th:classappend="${#fields.hasErrors('eventDetails.endTime')} ? 'is-invalid' : ''" id="endTime" th:field="*{eventDetails.endTime}" placeholder="e.g. 2 PM">
                                     <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.endTime')}" th:errors="*{eventDetails.endTime}"></div>
                                 </div>
                             </div>
@@ -57,31 +65,31 @@
 
                         <div class="mb-3">
                             <label for="location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="location" th:field="*{eventDetails.location}">
+                            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('eventDetails.location')} ? 'is-invalid' : ''" id="location" th:field="*{eventDetails.location}">
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.location')}" th:errors="*{eventDetails.location}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label for="budget" class="form-label">Budget ($)</label>
-                            <input type="number" step="0.01" class="form-control" id="budget" th:field="*{budget}">
+                            <input type="number" step="0.01" class="form-control" th:classappend="${#fields.hasErrors('budget')} ? 'is-invalid' : ''" id="budget" th:field="*{budget}">
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('budget')}" th:errors="*{budget}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label for="contactEmail" class="form-label">Contact Email</label>
-                            <input type="email" class="form-control" id="contactEmail" th:field="*{eventDetails.contactEmail}">
+                            <input type="email" class="form-control" th:classappend="${#fields.hasErrors('eventDetails.contactEmail')} ? 'is-invalid' : ''" id="contactEmail" th:field="*{eventDetails.contactEmail}">
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.contactEmail')}" th:errors="*{eventDetails.contactEmail}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label for="numberOfAttendees" class="form-label">Expected Attendance</label>
-                            <input type="number" class="form-control" id="numberOfAttendees" th:field="*{eventDetails.numberOfAttendees}" min="1">
+                            <input type="number" class="form-control" th:classappend="${#fields.hasErrors('eventDetails.numberOfAttendees')} ? 'is-invalid' : ''" id="numberOfAttendees" th:field="*{eventDetails.numberOfAttendees}" min="1">
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.numberOfAttendees')}" th:errors="*{eventDetails.numberOfAttendees}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" th:field="*{eventDetails.description}" rows="3"></textarea>
+                            <textarea class="form-control" th:classappend="${#fields.hasErrors('eventDetails.description')} ? 'is-invalid' : ''" id="description" th:field="*{eventDetails.description}" rows="3"></textarea>
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('eventDetails.description')}" th:errors="*{eventDetails.description}"></div>
                         </div>
 
