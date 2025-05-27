@@ -103,7 +103,6 @@ public class EventController {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Create Event");
             model.addAttribute("categories", eventCategoryRepository.findByUserId(user.getId()));
-            model.addAttribute("errorMsg", "Budget entry error: Must be numerical/monetary/decimal value.");
             return "events/create";
         }
 
@@ -167,8 +166,8 @@ public class EventController {
         if (e.isEmpty()) {
             return "redirect:/events";
         }
-        Event event = e.get();
-        List<Tag> tags = tagRepository.findByEventsId(event.getId());
+        Event existingEvent = e.get();
+        List<Tag> tags = tagRepository.findByEventsId(existingEvent.getId());
         for (Tag tag : tags) {
             newEvent.addTag(tag);
         }
@@ -184,6 +183,9 @@ public class EventController {
             model.addAttribute("tags", tags);
             return "events/edit";
         }
+
+        // Preserve existing budget items when updating the event
+        newEvent.getBudgetItemsList().addAll(existingEvent.getBudgetItemsList());
 
         // Handle date formatting and weekday calculation
         if (newEvent.getEventDetails() != null && newEvent.getEventDetails().getDate() != null) {

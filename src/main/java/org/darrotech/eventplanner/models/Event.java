@@ -106,7 +106,7 @@ public class Event implements Comparable<Event> {
     }
 
     public void setBalance(BigDecimal balance) {
-        this.balance = balance;
+        // Balance is calculated dynamically, no need to set it
     }
 
     public List<BudgetItems> getBudgetItems() {
@@ -120,13 +120,13 @@ public class Event implements Comparable<Event> {
     public void addBudgetItem(BudgetItems budgetItem) {
         budgetItem.setEvent(this);
         this.budgetItemsList.add(budgetItem);
-        this.balance = getBalance();
+        // Balance is calculated dynamically, no need to set it here
     }
 
     public void removeBudgetItem(BudgetItems budgetItem) {
         budgetItemsList.remove(budgetItem);
         budgetItem.setEvent(null);
-        this.balance = getBalance();
+        // Balance is calculated dynamically, no need to set it here
     }
 
     public BigDecimal getBudget() {
@@ -135,6 +135,7 @@ public class Event implements Comparable<Event> {
 
     public void setBudget(BigDecimal budget) {
         this.budget = budget;
+        // Balance will be recalculated automatically when needed through getBalance()
     }
 
     public String getName() {

@@ -37,7 +37,7 @@
 
                             <div class="mt-4">
                                 <a th:href="@{/budgetItems/create(eventId=${event.id})}" class="btn btn-primary w-100">
-                                    <i class="bi bi-plus-circle"></i> Add Expense
+                                    <i class="fas fa-plus-circle me-2"></i> Add Expense
                                 </a>
                             </div>
                         </div>
@@ -51,13 +51,13 @@
                         </div>
                         <div class="card-body">
                             <div th:if="${event.budgetItemsList != null && !event.budgetItemsList.isEmpty()}" class="table-responsive">
-                                <table class="table table-striped table-hover">
+                                <table class="table table-hover">
                                     <thead>
                                         <tr>
                                             <th>Item</th>
                                             <th>Vendor</th>
                                             <th>Price</th>
-                                            <th>Actions</th>
+                                            <th class="text-end">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -65,17 +65,19 @@
                                             <td th:text="${item.itemName}">Item Name</td>
                                             <td th:text="${item.vendor}">Vendor</td>
                                             <td>$<span th:text="${#numbers.formatDecimal(item.itemPrice, 1, 2)}">0.00</span></td>
-                                            <td>
-                                                <a th:href="@{/budgetItems/edit(id=${item.id})}" class="btn btn-sm btn-outline-primary me-2">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                                <form th:action="@{/budgetItems/delete}" method="post" style="display: inline;">
-                                                    <input type="hidden" name="id" th:value="${item.id}" />
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                                            onclick="return confirm('Are you sure you want to delete this expense?')">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
+                                            <td class="text-end">
+                                                <div class="action-icons">
+                                                    <a th:href="@{/budgetItems/edit(id=${item.id})}" class="btn btn-sm btn-outline-primary me-2">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form th:action="@{/budgetItems/delete}" method="post" style="display: inline;">
+                                                        <input type="hidden" name="id" th:value="${item.id}" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                                                onclick="return confirm('Are you sure you want to delete this expense?')">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>

@@ -140,17 +140,20 @@ a:hover {
     color: rgba(255, 255, 255, 0.85);
     font-weight: 500;
     padding: 0.5rem 1rem;
-    border-radius: 6px;
     margin: 0 2px;
+    box-shadow: none;
+    background: none;
+    border-radius: 0;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
     color: var(--text-light);
-    background-color: rgba(255, 255, 255, 0.1);
+    background: none;
 }
 
 .navbar-dark .navbar-nav .nav-link.active {
     color: var(--primary-light);
+    background: none;
 }
 
 .dropdown-menu-dark {
@@ -339,6 +342,7 @@ a:hover {
 
 .card-body {
     padding: 1.5rem;
+    color: var(--text-light);
 }
 
 .card-footer {
@@ -881,6 +885,7 @@ html {
     border-top: 1px solid var(--glass-border);
     z-index: 1020;
     padding: 1rem 0;
+    color: var(--text-light);
 }
 
 .footer-brand {
@@ -943,7 +948,7 @@ html {
 
 .copyright {
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-light);
     margin-bottom: 0;
 }
 
@@ -957,4 +962,42 @@ html {
         justify-content: center;
         margin-bottom: 1rem;
     }
-} 
+}
+
+/* Update icons for consistency */
+.btn-outline-danger i,
+.btn-outline-primary i {
+    margin-right: 0.5rem;
+}
+
+.btn-sm i {
+    margin-right: 0;
+}
+
+/* Consistent icons for actions */
+.action-icons i {
+    font-size: 1rem;
+}
+
+.action-icons .edit-icon {
+    color: var(--primary-color);
+}
+
+.action-icons .delete-icon {
+    color: var(--danger-color);
+}
+
+/* Update text colors for cards */
+.text-secondary {
+    color: var(--text-light) !important;
+}
+
+/* Update text colors for better visibility */
+.text-muted {
+    color: var(--text-light) !important;
+}
+
+/* Update copyright text color */
+.copyright {
+    display: none;
+}
