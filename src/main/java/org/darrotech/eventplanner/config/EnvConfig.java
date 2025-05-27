@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:.env")
+@PropertySource(value = "file:.env", ignoreResourceNotFound = true)
 public class EnvConfig {
-    // This class enables Spring Boot to read properties from .env file
-} 
+    // This class enables Spring Boot to read properties from .env file or environment variables
+}
