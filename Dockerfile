@@ -3,19 +3,18 @@ FROM gradle:8.5-jdk17 AS builder
 
 WORKDIR /app
 
-# Copy Gradle build scripts and wrapper
-COPY gradlew ./
-COPY build.gradle settings.gradle ./
-COPY gradle gradle/
+# Copy Gradle files first for better layer caching
+COPY gradle/ gradle/
+COPY gradlew build.gradle settings.gradle ./
 
 # Set execute permissions for gradlew
 RUN chmod +x ./gradlew
 
-# Pre-download dependencies
+# Download dependencies
 RUN ./gradlew dependencies --no-daemon
 
-# Copy the full project
-COPY . .
+# Copy source code
+COPY src/ src/
 
 # Build the application
 RUN ./gradlew bootJar --no-daemon -x test
@@ -25,8 +24,10 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-# Copy the built jar from the builder
+# Copy the built jar from the builder stage
 COPY --from=builder /app/build/libs/*.jar app.jar
+
+EXPOSE 8080
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
